@@ -1,0 +1,55 @@
+<template>
+    <div class="layout-container">
+        <div class="layout-sidebar">
+            <sidebar></sidebar>
+        </div>
+        <div class="layout-right">
+            <div class="layout-header"></div>
+            <div class="lay-content">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
+</template>
+<script setup>
+    import { onMounted } from 'vue'
+    import Sidebar from '@/layout/sidebar/index.vue'
+</script>
+<style lang="scss" scoped>
+    .layout-container {
+        display: flex;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .layout-sidebar {
+        max-width: 260px;
+        height: 100vh;
+        height: calc(var(--vh, 1vh) * 100);
+        background-color: #fff;
+    }
+
+    .layout-right {
+        flex: 1;
+        overflow: auto;
+        background-color: #f5f5f5;
+    }
+
+    .layout-header {
+        height: 60px;
+        background-color: #fff;
+        box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .lay-content{
+        background-color: #fff;
+        margin: 20px 20px 0 20px;
+        min-height: 800px;
+        border-radius: 10px;
+    }
+
+    :deep(.el-menu) {
+        border: 0;
+    }
+</style>
