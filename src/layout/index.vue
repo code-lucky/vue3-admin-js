@@ -4,7 +4,9 @@
             <sidebar></sidebar>
         </div>
         <div class="layout-right">
-            <div class="layout-header"></div>
+            <div class="layout-header">
+                <headers></headers>
+            </div>
             <div class="lay-content">
                 <router-view></router-view>
             </div>
@@ -14,6 +16,7 @@
 <script setup>
     import { onMounted } from 'vue'
     import Sidebar from '@/layout/sidebar/index.vue'
+    import Headers from '@/layout/header/index.vue'
 </script>
 <style lang="scss" scoped>
     .layout-container {
@@ -34,12 +37,6 @@
         flex: 1;
         overflow: auto;
         background-color: #f5f5f5;
-    }
-
-    .layout-header {
-        height: 60px;
-        background-color: #fff;
-        box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.1);
     }
 
     .lay-content{

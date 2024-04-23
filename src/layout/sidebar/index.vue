@@ -1,7 +1,6 @@
 <template>
-    <div class="logo-content"></div>
-    <el-menu default-active="2" :collapse="isCollapse" @open="handleOpen"
-        @close="handleClose">
+    <div class="logo-content">Logo {{isCollapse}}</div>
+    <el-menu default-active="2" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
         <el-sub-menu index="1">
             <template #title>
                 <el-icon>
@@ -42,7 +41,7 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
+    import { ref, onMounted, inject } from 'vue'
     import {
         Document,
         Menu as IconMenu,
@@ -50,13 +49,13 @@
         Setting,
     } from '@element-plus/icons-vue'
 
-    const isCollapse = ref(false)
     const handleOpen = (key, keyPath) => {
         console.log(key, keyPath)
     }
     const handleClose = (key, keyPath) => {
         console.log(key, keyPath)
     }
+    const isCollapse = inject('collapseStatus');
 </script>
 
 <style>
@@ -65,9 +64,12 @@
         min-height: 400px;
     }
 
-    .logo-content{
+    .logo-content {
         height: 60px;
         background-color: #fff;
         box-shadow: 0 0px 5px 0 rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
