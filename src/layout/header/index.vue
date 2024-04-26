@@ -1,33 +1,54 @@
 <template>
     <div class="header-container">
-        <img src="../../assets/images/pack-up.svg" class="pick-left" alt="" v-if="collapseStatus" @click="changeCollapse"/>
-        <img src="../../assets/images/pack-up.svg" class="pick-right" alt="" v-else  @click="changeCollapse"/>
+        <img src="../../assets/images/pack-up.svg" class="pick-left" alt="" v-if="collapseStatus"
+            @click="changeCollapse" />
+        <img src="../../assets/images/pack-up.svg" class="pick-right" alt="" v-else @click="changeCollapse" />
         <div class="header-pic">
-            <img src="../../assets/images/header-pic.svg" alt="" />
+            <el-dropdown>
+                <img src="../../assets/images/header-pic.svg" alt="" />
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="logout">LogOut</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
         </div>
     </div>
 </template>
 <script setup>
-    import { ref, provide, onMounted } from 'vue'
-    const collapseStatus = ref(true)
-    
+    import { ref, provide, onMounted, onUnmounted } from 'vue'
+    import eventBus from "@/utils/event-bus"
+    const collapseStatus = ref(false)
+
     const pageChange = () => {
         if (window.innerWidth < 768) {
             collapseStatus.value = true
+            eventBus.$emit('collapseStatus', collapseStatus.value)
         } else {
             collapseStatus.value = false
+            eventBus.$emit('collapseStatus', collapseStatus.value)
         }
     }
 
     const changeCollapse = () => {
         collapseStatus.value = !collapseStatus.value
+        eventBus.$emit('collapseStatus', collapseStatus.value)
     }
 
-    provide('collapseStatus', collapseStatus)
+    // 登出
+    const logout = () => {
+        localStorage.clear()
+        window.location.reload()
+    }
 
     onMounted(() => {
+        pageChange()
         // 监听页面大小变化
         window.addEventListener('resize', pageChange)
+    })
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', pageChange)
     })
 </script>
 <style scoped lang="scss">
@@ -43,6 +64,10 @@
     .header-pic {
         margin-left: auto;
         cursor: pointer;
+    }
+
+    :deep(.el-tooltip__trigger:focus-visible) {
+        outline: unset;
     }
 
     .pick-left,

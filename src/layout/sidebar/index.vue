@@ -1,5 +1,5 @@
 <template>
-    <div class="logo-content">Logo {{isCollapse}}</div>
+    <div class="logo-content">Logo</div>
     <el-menu default-active="2" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
         <el-sub-menu index="1">
             <template #title>
@@ -42,6 +42,7 @@
 
 <script setup>
     import { ref, onMounted, inject } from 'vue'
+    import eventBus from "@/utils/event-bus"
     import {
         Document,
         Menu as IconMenu,
@@ -49,13 +50,20 @@
         Setting,
     } from '@element-plus/icons-vue'
 
+    const isCollapse = ref(false);
+
     const handleOpen = (key, keyPath) => {
-        console.log(key, keyPath)
+        // console.log(key, keyPath)
     }
     const handleClose = (key, keyPath) => {
-        console.log(key, keyPath)
+        // console.log(key, keyPath)
     }
-    const isCollapse = inject('collapseStatus');
+    
+    onMounted(() => {
+        eventBus.$on('collapseStatus', (status) => {
+            isCollapse.value = status
+        })
+    })
 </script>
 
 <style>
