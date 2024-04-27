@@ -7,6 +7,11 @@ const routes = [
     component: ()=> import('@/views/login/index.vue')
   },
   {
+    path: '/:catchAll(.*)',
+    name: 'not-found',
+    component: () => import('@/views/components/404.vue'),
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: Layout,
