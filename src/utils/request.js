@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import catchs from '@/utils/cache'
-
+import { TOKEN } from './constant'
 const baseURL = '/api'
 
 const request = axios.create({
@@ -12,7 +11,7 @@ const request = axios.create({
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
-    const token = catchs.getCache('TOKEN')
+    const token = localStorage.getItem(TOKEN)
     if (token) {
       config.headers['X-Token'] = token
       config.headers.Authorization = `Bearer ${token}`

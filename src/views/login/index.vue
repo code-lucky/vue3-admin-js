@@ -21,6 +21,7 @@
     import { ref } from 'vue';
     import router from '@/router'
     import { login } from '@/api/login'
+    import { TOKEN } from '@/utils/constant'
     const loginForm = ref({
         user_name: '',
         password: ''
@@ -43,10 +44,9 @@
         loginFormRef.value.validate(valid => {
             if (valid) {
                 login(loginForm.value).then(res => {
-                    console.log(res);
-                    localStorage.setItem('token', res.data.token)
+                    localStorage.setItem(TOKEN, res.data.access_token)
+                    router.push('/dashboard')
                 })
-                router.push('/dashboard')
             } else {
                 console.log('表单验证失败');
                 return false;

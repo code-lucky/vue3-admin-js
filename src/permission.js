@@ -4,13 +4,13 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import eventBus from "@/utils/event-bus";
 import { userStore } from "./store/user";
+import { TOKEN } from '@/utils/constant'
 const store = userStore(pinia)
 const whiteList = ['/login', '/404']
 router.beforeEach(async (to, form, next) => {
     NProgress.start();
-    const Token = ''
+    const Token = localStorage.getItem(TOKEN)
     const hasRoutes = store.hasRoutes
-
     if (Token) {
         if (to.path === '/login') {
             next({ path: '/' })
