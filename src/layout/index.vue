@@ -8,15 +8,18 @@
                 <headers></headers>
             </div>
             <div class="lay-content">
-                <router-view></router-view>
+                <router-view :key="currentRoute"></router-view>
             </div>
         </div>
     </div>
 </template>
 <script setup>
-    import { onMounted } from 'vue'
+    import { onMounted, ref } from 'vue'
     import Sidebar from '@/layout/sidebar/index.vue'
     import Headers from '@/layout/header/index.vue'
+    import { useRouter } from 'vue-router';
+    const route = useRouter()
+    const currentRoute = ref(route.currentRoute.value.fullPath)
 </script>
 <style lang="scss" scoped>
     .layout-container {
@@ -39,7 +42,7 @@
         background-color: #f5f5f5;
     }
 
-    .lay-content{
+    .lay-content {
         background-color: #fff;
         margin: 20px 20px 0 20px;
         min-height: 800px;

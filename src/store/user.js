@@ -3,7 +3,7 @@ import { menuList } from "@/api/menu";
 import router from "@/router";
 import Layout from '@/layout/index.vue';
 import { nextTick } from "vue";
-const modules = import.meta.glob('@/views/*/*.vue')
+const modules = import.meta.glob('../views/*/*.vue')
 export const userStore = defineStore('user', {
     state: () => ({
         hasRoutes: false,
@@ -19,7 +19,6 @@ export const userStore = defineStore('user', {
                 const path = route.menu_path
                 const menu_component = route.menu_component
                 if (route.pid === 0) {
-
                     // 获取当前路由下的二级菜单
                     const children = this.routes.filter(item => item.pid === route.id)
                     console.log('child',children)
@@ -28,7 +27,7 @@ export const userStore = defineStore('user', {
                         children.forEach(child => {
                             const childPath = child.menu_path
                             const child_component = child.menu_component
-                            const component = modules[`../views/${child_component}/index.vue`]
+                            const component = modules[`../views/${child_component}.vue`]
                             if (component) {
                                 router.addRoute({
                                     path: path,
@@ -45,8 +44,8 @@ export const userStore = defineStore('user', {
                             }
                         })
                     } else {
-                        const component = modules[`../views/${menu_component}/index.vue`]
-                        console.log('component', component)
+                        const component = modules[`../views/${menu_component}.vue`]
+                        console.log(`../views/${menu_component}.vue`, component)
                         if (component) {
                             router.addRoute({
                                 path: path,
