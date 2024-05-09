@@ -1,42 +1,17 @@
 <template>
     <div class="logo-content">Logo</div>
     <el-menu default-active="2" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
-        <el-sub-menu index="1">
+        <el-sub-menu :index="item.path" v-for="(item,index) in menuList" :key="item.index">
             <template #title>
                 <el-icon>
                     <location />
                 </el-icon>
-                <span>Navigator One</span>
+                <span>{{item.name}}</span>
             </template>
-            <el-menu-item-group>
-                <template #title><span>Group One</span></template>
-                <el-menu-item index="1-1">item one</el-menu-item>
-                <el-menu-item index="1-2">item two</el-menu-item>
+            <el-menu-item-group v-for="(child,idx) in item.children" :key="idx">
+                <el-menu-item :index="child.path" @click="goPath(child.path)">{{child.name}}</el-menu-item>
             </el-menu-item-group>
-            <el-menu-item-group title="Group Two">
-                <el-menu-item index="1-3">item three</el-menu-item>
-            </el-menu-item-group>
-            <el-sub-menu index="1-4">
-                <template #title><span>item four</span></template>
-                <el-menu-item index="1-4-1">item one</el-menu-item>
-            </el-sub-menu>
         </el-sub-menu>
-        <el-menu-item index="2">
-            <el-icon><icon-menu /></el-icon>
-            <template #title>Navigator Two</template>
-        </el-menu-item>
-        <el-menu-item index="3" disabled>
-            <el-icon>
-                <document />
-            </el-icon>
-            <template #title>Navigator Three</template>
-        </el-menu-item>
-        <el-menu-item index="4">
-            <el-icon>
-                <setting />
-            </el-icon>
-            <template #title>Navigator Four</template>
-        </el-menu-item>
     </el-menu>
 </template>
 
@@ -49,6 +24,12 @@
         Location,
         Setting,
     } from '@element-plus/icons-vue'
+    import router from "@/router/index"
+    import pinia from "@/store/index"
+    import { userStore } from "@/store/user";
+    const store = userStore(pinia)
+
+    const menuList = store.menuList
 
     const isCollapse = ref(false);
 
@@ -59,6 +40,10 @@
         // console.log(key, keyPath)
     }
     
+    const goPath = (path) => {
+        router.push(path)
+    }
+
     onMounted(() => {
         eventBus.$on('collapseStatus', (status) => {
             isCollapse.value = status

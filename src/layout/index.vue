@@ -8,7 +8,7 @@
                 <headers></headers>
             </div>
             <div class="lay-content">
-                <router-view :key="currentRoute"></router-view>
+                <router-view :key="currentRoute" />
             </div>
         </div>
     </div>

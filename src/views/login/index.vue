@@ -45,7 +45,7 @@
             if (valid) {
                 login(loginForm.value).then(res => {
                     localStorage.setItem(TOKEN, res.data.access_token)
-                    router.push('/dashboard')
+                    router.push('/dashboard/index')
                 })
             } else {
                 console.log('表单验证失败');

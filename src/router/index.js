@@ -6,18 +6,7 @@ const routes = [
     name: 'login',
     component: ()=> import('@/views/login/index.vue')
   },
-  {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Layout,
-    children: [
-      {
-        path: '/index',
-        name: 'index',
-        component: ()=> import('@/views/dashboard/index.vue')
-      }
-    ]
-  }
+  
 ];
 
 const router = createRouter({
