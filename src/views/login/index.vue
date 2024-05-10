@@ -1,17 +1,18 @@
 <template>
     <el-container class="container">
         <el-card class="card login-container">
-            <div class="login-title">Login</div>
-            <el-form ref="loginFormRef" :model="loginForm" :rules="rules" label-width="100px">
-                <el-form-item label="UserName" prop="user_name">
-                    <el-input size="large" v-model="loginForm.user_name" placeholder="Please enter username"></el-input>
+            <div class="login-title">后台登录</div>
+            <el-form class="form" ref="loginFormRef" :model="loginForm" :rules="rules">
+                <el-form-item label="" prop="user_name">
+                    <el-input size="large" v-model="loginForm.user_name" :prefix-icon="User"
+                        placeholder="Please enter username"></el-input>
                 </el-form-item>
-                <el-form-item label="Password" prop="password" label-width="100px">
-                    <el-input size="large" v-model="loginForm.password" placeholder="please enter password"
-                        type="password"></el-input>
+                <el-form-item label="" prop="password">
+                    <el-input size="large" v-model="loginForm.password" :prefix-icon="Lock"
+                        placeholder="please enter password" type="password"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="large" type="primary" @click="submitForm" plain>Login</el-button>
+                    <el-button size="large" type="primary" @click="submitForm" class="login-btn">Login</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -20,6 +21,7 @@
 <script setup>
     import { ref } from 'vue';
     import router from '@/router'
+    import { User, Lock } from '@element-plus/icons-vue'
     import { login } from '@/api/login'
     import { TOKEN } from '@/utils/constant'
     const loginForm = ref({
@@ -64,15 +66,24 @@
     }
 
     .login-container {
-        max-width: 600px;
+        max-width: 400px;
         width: 100%;
-        height: 320px;
+        height: 360px;
     }
 
     .login-title {
         text-align: center;
-        font-size: 38px;
+        font-size: 28px;
         font-weight: bold;
         padding: 20px 0;
+    }
+
+    .form {
+        margin-top: 20px;
+        padding: 0 40px;
+    }
+
+    .login-btn {
+        width: 100%;
     }
 </style>
