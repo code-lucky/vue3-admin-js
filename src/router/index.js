@@ -4,9 +4,19 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: ()=> import('@/views/login/index.vue')
+    component: () => import('@/views/login/index.vue')
   },
-  
+  {
+    path: '/profile',
+    name: 'profile',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index.vue')
+      }
+    ]
+  },
 ];
 
 const router = createRouter({

@@ -3,9 +3,9 @@ import pinia from "./store/index"
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import eventBus from "@/utils/event-bus";
-import { userStore } from "./store/user";
+import { useUserStore } from "./store/user";
 import { TOKEN } from '@/utils/constant'
-const store = userStore(pinia)
+const store = useUserStore(pinia)
 const whiteList = ['/login', '/404']
 router.beforeEach(async (to, form, next) => {
     NProgress.start();

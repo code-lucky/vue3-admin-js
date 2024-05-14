@@ -26,8 +26,8 @@
     } from '@element-plus/icons-vue'
     import router from "@/router/index"
     import pinia from "@/store/index"
-    import { userStore } from "@/store/user";
-    const store = userStore(pinia)
+    import { useUserStore } from "@/store/user";
+    const store = useUserStore(pinia)
 
     const menuList = store.menuList
 

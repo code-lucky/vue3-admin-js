@@ -3,12 +3,14 @@ import { menuList } from "@/api/menu";
 import router from "@/router";
 import Layout from '@/layout/index.vue';
 import { nextTick } from "vue";
+import { userInfo } from "../api/user";
 const modules = import.meta.glob('../views/*/*.vue')
-export const userStore = defineStore('user', {
+export const useUserStore = defineStore('user', {
     state: () => ({
         hasRoutes: false,
         routes: [],
-        menuList: []
+        menuList: [],
+        userInfo: {},
     }),
     actions: {
         async setRoutes() {
@@ -36,13 +38,19 @@ export const userStore = defineStore('user', {
                     if (children.length > 0) {
                         route.children = children
                     }
-                    
+
                     router.addRoute(route)
                     list.push(route)
                 }
             })
 
             return list
+        },
+        async getUserInfo() {
+            userInfo().then(res => {
+                this.userInfo = res.data
+                console.log(this.userInfo)
+            })
         }
     }
 })
