@@ -5,9 +5,12 @@
         <img src="../../assets/images/pack-up.svg" class="pick-right" alt="" v-else @click="changeCollapse" />
         <div class="header-pic">
             <el-dropdown>
-                <img src="../../assets/images/header-pic.svg" alt="" />
+                <img src="../../assets/images/header-pic.svg" alt="" @click="profile()"/>
                 <template #dropdown>
                     <el-dropdown-menu>
+                        <el-dropdown-item @click="changePassword">Change Password</el-dropdown-item>
+                        <el-dropdown-item @click="changeEmail">Change Email</el-dropdown-item>
+                        <el-dropdown-item @click="changeUserName">Change User Name</el-dropdown-item>
                         <el-dropdown-item @click="logout">LogOut</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
@@ -17,7 +20,9 @@
 </template>
 <script setup>
     import { ref, provide, onMounted, onUnmounted } from 'vue'
+    import { useRouter } from 'vue-router'
     import eventBus from "@/utils/event-bus"
+    const router = useRouter()
     const collapseStatus = ref(false)
 
     const pageChange = () => {
@@ -39,6 +44,25 @@
     const logout = () => {
         localStorage.clear()
         window.location.reload()
+    }
+
+    const profile = () => {
+        router.push('/profile/index')
+    }
+
+    const changePassword = () => {
+        // router.push('/profile/change-password')
+        console.log('changePassword')
+    }
+
+    const changeEmail = () => {
+        // router.push('/profile/change-email')
+        console.log('changeEmail')
+    }
+
+    const changeUserName = () => {
+        // router.push('/profile/change-user-name')
+        console.log('changeUserName')
     }
 
     onMounted(() => {

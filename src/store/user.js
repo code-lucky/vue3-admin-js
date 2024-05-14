@@ -49,7 +49,6 @@ export const useUserStore = defineStore('user', {
         async getUserInfo() {
             userInfo().then(res => {
                 this.userInfo = res.data
-                console.log(this.userInfo)
             })
         }
     }

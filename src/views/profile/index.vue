@@ -2,12 +2,11 @@
     <div class="profile-box">
         <h1>Profile</h1>
         <el-form :model="form" label-width="120px">
-            {{userInfo}}
             <el-form-item label="User Name">
-                <el-input v-model="form.user_name" size="large"></el-input>
+                <el-input v-model="form.user_name" size="large" disabled></el-input>
             </el-form-item>
             <el-form-item label="Email">
-                <el-input v-model="form.email" size="large"></el-input>
+                <el-input v-model="form.email" size="large" disabled></el-input>
             </el-form-item>
             <el-form-item label="Profile Photo">
                 <el-upload class="avatar-uploader" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
@@ -25,7 +24,7 @@
     </div>
 </template>
 <script setup>
-    import { ref, onMounted, nextTick } from 'vue'
+    import { ref, onMounted, nextTick, watch } from 'vue'
     import { storeToRefs } from 'pinia'
     import pinia from "@/store/index"
     import { useUserStore } from "@/store/user";
@@ -45,17 +44,17 @@
         console.log(form.value)
     }
 
-    onMounted(() => {
-        console.log(userInfo)
-        nextTick(() => {
+    // Watch userInfo and update the form when userInfo changes
+    watch(userInfo, (newUserInfo) => {
+        if (newUserInfo) {
             form.value = {
-                id: userInfo.id,
-                user_name: userInfo.user_name,
-                email: userInfo.email,
-                head_pic: userInfo.head_pic
+                id: newUserInfo.id,
+                user_name: newUserInfo.user_name,
+                email: newUserInfo.email,
+                head_pic: newUserInfo.head_pic
             }
-        })
-    })
+        }
+    }, { immediate: true })
 </script>
 <style scoped lang="scss">
     h1 {
