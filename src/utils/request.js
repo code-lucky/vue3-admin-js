@@ -40,11 +40,9 @@ request.interceptors.response.use(
     }
   },
   error => {
-    console.log('响应出错', error)
-    if (error.response && error.response.status === 403) {
-      ElMessage.error('发生了错误')
-    } else if (error.response && error.response.data && error.response.data.data) {
-      ElMessage.error(error.response.data.data)
+    const data = error.response.data
+    if(data.statusCode === 400){
+      ElMessage.error(data.message)
     } else {
       ElMessage.error('网络错误')
     }

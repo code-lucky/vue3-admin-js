@@ -5,7 +5,8 @@
         <img src="../../assets/images/pack-up.svg" class="pick-right" alt="" v-else @click="changeCollapse" />
         <div class="header-pic">
             <el-dropdown>
-                <img src="../../assets/images/header-pic.svg" alt="" @click="profile()"/>
+                <img v-if="userInfo.head_pic" :src="$fileUrl + userInfo.head_pic" alt="" @click="profile()" />
+                <img v-else src="../../assets/images/header-pic.svg" alt="" @click="profile()" />
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item @click="changePassword">Change Password</el-dropdown-item>
@@ -22,6 +23,13 @@
     import { ref, provide, onMounted, onUnmounted } from 'vue'
     import { useRouter } from 'vue-router'
     import eventBus from "@/utils/event-bus"
+    import { storeToRefs } from 'pinia'
+    import { useUserStore } from "@/store/user";
+    import { getAssetURL } from "@/utils/load_assets.js";
+
+    const useUser = useUserStore()
+    const { userInfo } = storeToRefs(useUser)
+    useUser.getUserInfo()
     const router = useRouter()
     const collapseStatus = ref(false)
 
@@ -51,7 +59,7 @@
     }
 
     const changePassword = () => {
-        // router.push('/profile/change-password')
+        router.push('/profile/change-password')
         console.log('changePassword')
     }
 
@@ -102,5 +110,11 @@
 
     .pick-right {
         transform: rotate(180deg);
+    }
+
+    .header-pic img{
+        width: 48px;
+        height: 48px;
+        border-radius: 48px;
     }
 </style>

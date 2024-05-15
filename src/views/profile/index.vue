@@ -9,9 +9,9 @@
                 <el-input v-model="form.email" size="large" disabled></el-input>
             </el-form-item>
             <el-form-item label="Profile Photo">
-                <el-upload class="avatar-uploader" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                    :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <el-upload class="avatar-uploader" :action="$uploadUrl" :show-file-list="false"
+                    :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                    <img v-if="form.head_pic" :src="$fileUrl + form.head_pic" class="avatar" />
                     <el-icon v-else class="avatar-uploader-icon">
                         <Plus />
                     </el-icon>
@@ -25,9 +25,11 @@
 </template>
 <script setup>
     import { ref, onMounted, nextTick, watch } from 'vue'
+    import { ElMessage } from 'element-plus'
     import { storeToRefs } from 'pinia'
     import pinia from "@/store/index"
     import { useUserStore } from "@/store/user";
+    import { updateUser } from "@/api/user";
     const useUser = useUserStore()
     const { userInfo } = storeToRefs(useUser)
     useUser.getUserInfo()
@@ -41,7 +43,16 @@
 
     const imageUrl = ref('')
     const submitForm = () => {
-        console.log(form.value)
+        updateUser(form.value).then(res => {
+            if (res.code === 200) {
+                ElMessage.success(res.data)
+                useUser.getUserInfo()
+            }
+        })
+    }
+
+    const handleAvatarSuccess = (res, file) => {
+        form.value.head_pic = res.data.file
     }
 
     // Watch userInfo and update the form when userInfo changes
@@ -90,9 +101,9 @@
     }
 
     .el-icon.avatar-uploader-icon {
+        width: 178px;
         font-size: 28px;
         color: #8c939d;
-        width: 178px;
         height: 178px;
         text-align: center;
     }

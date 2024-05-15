@@ -14,7 +14,11 @@ const routes = [
       {
         path: 'index',
         component: () => import('@/views/profile/index.vue')
-      }
+      },
+      {
+        path: 'change-password',
+        component: () => import('@/views/profile/change_password.vue')
+      },
     ]
   },
 ];
