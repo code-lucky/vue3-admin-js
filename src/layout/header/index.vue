@@ -64,7 +64,7 @@
     }
 
     const changeEmail = () => {
-        // router.push('/profile/change-email')
+        router.push('/profile/change-email')
         console.log('changeEmail')
     }
 
