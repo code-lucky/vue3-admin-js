@@ -6,7 +6,7 @@ import eventBus from "@/utils/event-bus";
 import { useUserStore } from "./store/user";
 import { TOKEN } from '@/utils/constant'
 const store = useUserStore(pinia)
-const whiteList = ['/login', '/404']
+const whiteList = ['/login', '/404', 'sign-up']
 router.beforeEach(async (to, form, next) => {
     NProgress.start();
     const Token = localStorage.getItem(TOKEN)

@@ -1,7 +1,7 @@
 <template>
     <el-container class="container">
         <el-card class="card login-container">
-            <div class="login-title">Sign in</div>
+            <div class="login-title">Forgot password</div>
             <el-form class="form" ref="loginFormRef" :model="loginForm" :rules="rules">
                 <el-form-item label="" prop="user_name">
                     <el-input size="large" v-model="loginForm.user_name" :prefix-icon="User"
@@ -11,15 +11,11 @@
                     <el-input size="large" v-model="loginForm.password" :prefix-icon="Lock"
                         placeholder="please enter password" type="password"></el-input>
                 </el-form-item>
-                <div class="login-toast">
-                    <div class="remember"><el-switch style="--el-switch-on-color: #626aef;"
-                            v-model="loginForm.remember" active-text="Remember me"/></div>
-                    <div class="forgot" @click="forgot">Forgot password?</div>
-                </div>
+                
                 <el-form-item>
-                    <el-button size="large" color="#626aef" @click="submitForm" class="login-btn">Sign in</el-button>
+                    <el-button size="large" color="#626aef" @click="submitForm" class="login-btn">Sign up</el-button>
                 </el-form-item>
-                <div>Don't have an account? <span class="sign" @click="signUp">Sign up</span></div>
+                <div>Already have an account?<span class="sign" @click="signUp">Sign in</span></div>
             </el-form>
         </el-card>
     </el-container>
@@ -64,11 +60,7 @@
     };
 
     const signUp = () => {
-        router.push('/sign_up')
-    }
-
-    const forgot = () => {
-        router.push('/forgot_password')
+        router.push('/login')
     }
 </script>
 <style scoped lang="scss">
@@ -109,31 +101,30 @@
         margin-bottom: 20px;
     }
 
-    .remember,
-    .forgot {
+    .remember, .forgot {
         cursor: pointer;
     }
 
-    .remember {
+    .remember{
         color: #2d2d2d;
     }
 
-    .forgot {
+    .forgot{
         color: #2d2d2d;
         font-weight: bold;
     }
 
-    .forgot:hover {
+    .forgot:hover{
         color: #616161;
     }
 
-    .sign {
+    .sign{
         color: #2d2d2d;
         font-weight: bold;
         cursor: pointer;
     }
 
-    .sign:hover {
+    .sign:hover{
         color: #616161;
     }
 </style>

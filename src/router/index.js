@@ -7,6 +7,16 @@ const routes = [
     component: () => import('@/views/login/index.vue')
   },
   {
+    path: '/sign-up',
+    name: 'sign-up',
+    component: () => import('@/views/sign_up/index.vue')
+  },
+  {
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: () => import('@/views/forgot/index.vue')
+  },
+  {
     path: '/profile',
     name: 'profile',
     component: Layout,

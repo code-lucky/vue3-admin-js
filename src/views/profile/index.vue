@@ -27,7 +27,6 @@
     import { ref, onMounted, nextTick, watch } from 'vue'
     import { ElMessage } from 'element-plus'
     import { storeToRefs } from 'pinia'
-    import pinia from "@/store/index"
     import { useUserStore } from "@/store/user";
     import { updateUser } from "@/api/user";
     const useUser = useUserStore()

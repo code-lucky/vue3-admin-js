@@ -14,7 +14,7 @@
                 <div class="login-toast">
                     <div class="remember"><el-switch style="--el-switch-on-color: #626aef;"
                             v-model="loginForm.remember" active-text="Remember me"/></div>
-                    <div class="forgot" @click="forgot">Forgot password?</div>
+                    <div class="forgot">Forgot password?</div>
                 </div>
                 <el-form-item>
                     <el-button size="large" color="#626aef" @click="submitForm" class="login-btn">Sign in</el-button>
@@ -65,10 +65,6 @@
 
     const signUp = () => {
         router.push('/sign_up')
-    }
-
-    const forgot = () => {
-        router.push('/forgot_password')
     }
 </script>
 <style scoped lang="scss">

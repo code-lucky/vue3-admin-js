@@ -3,7 +3,7 @@
         <h1>Change Email</h1>
         <el-form :model="form" label-width="150px" :rules="rules" ref="formRef">
             <el-form-item label="Current Email" prop="current_email">
-                <el-input v-model="form.current_email" size="large" clearable></el-input>
+                <el-input v-model="form.current_email" size="large" clearable disabled></el-input>
             </el-form-item>
             <el-form-item label="New Email" prop="email">
                 <el-input v-model="form.email" size="large" clearable></el-input>
@@ -11,7 +11,8 @@
             <el-form-item label="Captcha" prop="captcha">
                 <div class="flex-column">
                     <el-input v-model="form.captcha" size="large" clearable></el-input>
-                    <el-button type="success" @click="getCaptcha" :disabled="isDisabled" size="large">{{ captchaText }}</el-button>
+                    <el-button type="success" @click="getCaptcha" :disabled="isDisabled" size="large">{{ captchaText
+                        }}</el-button>
                 </div>
             </el-form-item>
             <el-form-item label>
@@ -21,10 +22,14 @@
     </div>
 </template>
 <script setup>
-    import { ref, nextTick, reactive } from 'vue'
+    import { ref, nextTick, reactive, watchEffect } from 'vue'
     import { ElMessage } from 'element-plus'
-    import { updatePassword } from "@/api/user";
-
+    import { updateEmailSendCode, updateEmail } from "@/api/user";
+    import { storeToRefs } from 'pinia'
+    import { useUserStore } from "@/store/user";
+    const useUser = useUserStore()
+    const { userInfo } = storeToRefs(useUser)
+    useUser.getUserInfo()
     const captchaText = ref('Get Captcha')
 
     const isDisabled = ref(false)
@@ -63,9 +68,12 @@
     const submitForm = () => {
         formRef.value.validate((valid) => {
             if (valid) {
-                updatePassword(form.value).then(res => {
+                updateEmail(form.value).then(res => {
                     if (res.code === 200) {
-                        ElMessage.success('Change password successfully')
+                        ElMessage.success('Change email successfully')
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 1500)
                     }
                 })
             } else {
@@ -87,7 +95,20 @@
                 isDisabled.value = false
             }
         }, 1000)
+
+        updateEmailSendCode(form.value.email).then(res => {
+            if (res.code === 200) {
+                ElMessage.success(res.data)
+            }
+        })
     }
+
+
+    watchEffect(() => {
+        if (userInfo.value) {
+            form.value.current_email = userInfo.value.email
+        }
+    })
 </script>
 <style scoped lang="scss">
     h1 {
