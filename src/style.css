@@ -1,3 +1,8 @@
+:root{
+    --el-color-primary: #626aef !important;
+    --el-color-primary-light-3: #5157c5 !important;
+    --el-color-primary-dark-2: #4b51b0 !important;
+}
 body{
     margin: 0;
     padding: 0; 
@@ -5,4 +10,10 @@ body{
 
 .app-container{
     padding: 20px;
+}
+
+.flex-column {
+    display: flex;
+    width: 100%;
+    gap: 10px;
 }

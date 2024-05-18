@@ -6,7 +6,7 @@ import eventBus from "@/utils/event-bus";
 import { useUserStore } from "./store/user";
 import { TOKEN } from '@/utils/constant'
 const store = useUserStore(pinia)
-const whiteList = ['/login', '/404', 'sign-up']
+const whiteList = ['/login', '/404', '/sign-up', '/forgot-password']
 router.beforeEach(async (to, form, next) => {
     NProgress.start();
     const Token = localStorage.getItem(TOKEN)
@@ -34,6 +34,7 @@ router.beforeEach(async (to, form, next) => {
             NProgress.done()
         }
     } else {
+        console.log(to.path,whiteList.indexOf(to.path))
         if (whiteList.indexOf(to.path) !== -1) {
             next()
             NProgress.done()

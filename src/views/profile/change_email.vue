@@ -11,7 +11,7 @@
             <el-form-item label="Captcha" prop="captcha">
                 <div class="flex-column">
                     <el-input v-model="form.captcha" size="large" clearable></el-input>
-                    <el-button type="success" @click="getCaptcha" :disabled="isDisabled" size="large">{{ captchaText
+                    <el-button type="primary" @click="getCaptcha" :disabled="isDisabled" size="large">{{ captchaText
                         }}</el-button>
                 </div>
             </el-form-item>

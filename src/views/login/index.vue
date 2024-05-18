@@ -9,15 +9,14 @@
                 </el-form-item>
                 <el-form-item label="" prop="password">
                     <el-input size="large" v-model="loginForm.password" :prefix-icon="Lock"
-                        placeholder="please enter password" type="password"></el-input>
+                        placeholder="Please enter password" type="password"></el-input>
                 </el-form-item>
                 <div class="login-toast">
-                    <div class="remember"><el-switch style="--el-switch-on-color: #626aef;"
-                            v-model="loginForm.remember" active-text="Remember me"/></div>
+                    <div class="remember"><el-switch v-model="loginForm.remember" active-text="Remember me"/></div>
                     <div class="forgot" @click="forgot">Forgot password?</div>
                 </div>
                 <el-form-item>
-                    <el-button size="large" color="#626aef" @click="submitForm" class="login-btn">Sign in</el-button>
+                    <el-button size="large" type="primary" @click="submitForm" class="login-btn">Sign in</el-button>
                 </el-form-item>
                 <div>Don't have an account? <span class="sign" @click="signUp">Sign up</span></div>
             </el-form>
@@ -64,11 +63,11 @@
     };
 
     const signUp = () => {
-        router.push('/sign_up')
+        router.push('/sign-up')
     }
 
     const forgot = () => {
-        router.push('/forgot_password')
+        router.push('/forgot-password')
     }
 </script>
 <style scoped lang="scss">
@@ -135,5 +134,6 @@
 
     .sign:hover {
         color: #616161;
+        color: #5157c5;
     }
 </style>

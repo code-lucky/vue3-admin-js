@@ -1,25 +1,27 @@
 <template>
     <el-container class="container">
         <el-card class="card login-container">
-            <div class="login-title">Sign in</div>
-            <el-form class="form" ref="loginFormRef" :model="loginForm" :rules="rules">
-                <el-form-item label="" prop="user_name">
-                    <el-input size="large" v-model="loginForm.user_name" :prefix-icon="User"
-                        placeholder="Please enter username"></el-input>
+            <div class="login-title">Forgot password</div>
+            <el-form class="form" ref="formRef" :model="form" :rules="rules">
+                <el-form-item label="" prop="email">
+                    <el-input size="large" v-model="form.email" :prefix-icon="Message"
+                        placeholder="Please enter email"></el-input>
                 </el-form-item>
-                <el-form-item label="" prop="password">
-                    <el-input size="large" v-model="loginForm.password" :prefix-icon="Lock"
-                        placeholder="please enter password" type="password"></el-input>
+                <el-form-item label="" prop="captcha">
+                    <div class="flex-column">
+                        <el-input size="large" v-model="form.captcha" placeholder="please enter captcha"></el-input>
+                        <el-button color="#626aef" size="large" @click="getCaptcha"
+                            :disabled="isDisabled">{{captchaText}}</el-button>
+                    </div>
                 </el-form-item>
-                <div class="login-toast">
-                    <div class="remember"><el-switch style="--el-switch-on-color: #626aef;"
-                            v-model="loginForm.remember" active-text="Remember me"/></div>
-                    <div class="forgot">Forgot password?</div>
+                <div class="reset-hint">
+                    The reset password is <span>123456</span>
                 </div>
                 <el-form-item>
-                    <el-button size="large" color="#626aef" @click="submitForm" class="login-btn">Sign in</el-button>
+                    <el-button size="large" type="primary" @click="submitForm" class="login-btn">Reset
+                        password</el-button>
                 </el-form-item>
-                <div>Don't have an account? <span class="sign" @click="signUp">Sign up</span></div>
+                <div>Password reset successfully? <span class="sign" @click="signIn">Sign in</span></div>
             </el-form>
         </el-card>
     </el-container>
@@ -27,34 +29,38 @@
 <script setup>
     import { ref } from 'vue';
     import router from '@/router'
-    import { User, Lock } from '@element-plus/icons-vue'
-    import { login } from '@/api/login'
+    import { ElMessage } from 'element-plus'
+    import { Message } from '@element-plus/icons-vue'
+    import { resetPasswordCode, resetPassword } from '@/api/user'
     import { TOKEN } from '@/utils/constant'
-    const loginForm = ref({
-        user_name: '',
-        password: '',
-        remember: false
+    const form = ref({
+        email: '',
+        captcha: ''
     });
 
-    const loginFormRef = ref(null);
+    const captchaText = ref('Get Captcha')
+    const isDisabled = ref(false)
+    const formRef = ref(null);
 
     // 使用 ref 创建验证规则
     const rules = ref({
-        user_name: [
-            { required: true, message: 'Please enter username', trigger: 'blur' }
+        email: [
+            { required: true, message: 'Please enter email', trigger: 'blur', type: 'email' }
         ],
-        password: [
-            { required: true, message: 'please enter password', trigger: 'blur' }
+        captcha: [
+            { required: true, message: 'please enter captcha', trigger: 'blur' }
         ]
     });
 
     // 提交表单
     const submitForm = () => {
-        loginFormRef.value.validate(valid => {
+        formRef.value.validate(valid => {
             if (valid) {
-                login(loginForm.value).then(res => {
-                    localStorage.setItem(TOKEN, res.data.access_token)
-                    router.push('/dashboard/index')
+                resetPassword(form.value).then(res => {
+                    ElMessage.success('Reset password successfully')
+                    setTimeout(() => {
+                        router.push('/login')
+                    }, 1000)
                 })
             } else {
                 console.log('表单验证失败');
@@ -63,8 +69,29 @@
         });
     };
 
-    const signUp = () => {
-        router.push('/sign_up')
+    const signIn = () => {
+        router.push('/login')
+    }
+
+    const getCaptcha = () => {
+        let count = 60
+        isDisabled.value = true
+
+        resetPasswordCode(form.value.email).then(res => {
+            const timer = setInterval(() => {
+                count--
+                if (count > 0) {
+                    captchaText.value = `${count}s`
+                } else {
+                    clearInterval(timer)
+                    captchaText.value = 'Get Captcha'
+                    isDisabled.value = false
+                }
+            }, 1000)
+        }).catch(err => {
+            isDisabled.value = false
+            captchaText.value = 'Get Captcha'
+        })
     }
 </script>
 <style scoped lang="scss">
@@ -131,5 +158,14 @@
 
     .sign:hover {
         color: #616161;
+    }
+
+    .reset-hint {
+        padding: 0 0 20px 0;
+    }
+
+    .reset-hint span {
+        color: #b53c3c;
+        font-weight: bold;
     }
 </style>

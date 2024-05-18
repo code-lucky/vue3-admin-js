@@ -25,3 +25,14 @@ export function updateEmail(data) {
 export function updateEmailSendCode(email) {
     return requestMethod.get(`/api/user/updateEmailSendCode?email=${email}`)
 }
+
+// 重置密码验证码
+export function resetPasswordCode(email) {
+    return requestMethod.get(`/api/user/resetPasswordCode?email=${email}`)
+}
+
+
+// 重置密码
+export function resetPassword(data) {
+    return requestMethod.post(`/api/user/resetPassword?email=${data.email}&captcha=${data.captcha}`)
+}
