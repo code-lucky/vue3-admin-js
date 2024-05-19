@@ -45,7 +45,7 @@
     .lay-content {
         background-color: #fff;
         margin: 20px 20px 0 20px;
-        min-height: 800px;
+        min-height: calc(100% - 140px);
         border-radius: 10px;
         padding: 20px;
     }

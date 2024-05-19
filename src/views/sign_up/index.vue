@@ -9,7 +9,7 @@
                 </el-form-item>
                 <el-form-item label="" prop="password">
                     <el-input size="large" v-model="form.password" :prefix-icon="Lock"
-                        placeholder="please enter password" type="password"></el-input>
+                        placeholder="please enter password" type="password" show-password></el-input>
                 </el-form-item>
 
                 <el-form-item label="" prop="email">

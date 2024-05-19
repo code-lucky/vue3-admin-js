@@ -30,13 +30,25 @@ export const useUserStore = defineStore('user', {
                     const route = {
                         path: item.menu_path,
                         name: item.menu_name,
+                        icon: item.menu_icon,
                         children: [],
                         component: item.pid === 0 ? Layout : modules[`../views${item.menu_component}.vue`],
+                        hide: item.hide == 1 ? true : false
                     }
                     const children = await this.generateMenuTree(menuList, item.id)
 
                     if (children.length > 0) {
                         route.children = children
+                    }else{
+                        route.children = [
+                            {
+                                path: item.menu_path,
+                                name: item.menu_name,
+                                icon: item.menu_icon,
+                                component: modules[`../views${item.menu_component}.vue`],
+                                hide: true
+                            }
+                        ]
                     }
 
                     router.addRoute(route)

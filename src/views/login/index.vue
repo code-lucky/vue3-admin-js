@@ -9,10 +9,11 @@
                 </el-form-item>
                 <el-form-item label="" prop="password">
                     <el-input size="large" v-model="loginForm.password" :prefix-icon="Lock"
-                        placeholder="Please enter password" type="password"></el-input>
+                        placeholder="Please enter password" type="password" show-password>
+                    </el-input>
                 </el-form-item>
                 <div class="login-toast">
-                    <div class="remember"><el-switch v-model="loginForm.remember" active-text="Remember me"/></div>
+                    <div class="remember"><el-switch v-model="loginForm.remember" active-text="Remember me" /></div>
                     <div class="forgot" @click="forgot">Forgot password?</div>
                 </div>
                 <el-form-item>
@@ -26,7 +27,7 @@
 <script setup>
     import { ref } from 'vue';
     import router from '@/router'
-    import { User, Lock } from '@element-plus/icons-vue'
+    import { User, Lock, View, Hide } from '@element-plus/icons-vue'
     import { login } from '@/api/login'
     import { TOKEN } from '@/utils/constant'
     const loginForm = ref({
@@ -34,7 +35,6 @@
         password: '',
         remember: false
     });
-
     const loginFormRef = ref(null);
 
     // 使用 ref 创建验证规则

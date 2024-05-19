@@ -17,3 +17,10 @@ body{
     width: 100%;
     gap: 10px;
 }
+
+.el-form-item, .el-form-item__content{
+    width: 100%;
+}
+:deep() {
+    width: 100%;
+}
