@@ -1,22 +1,19 @@
 <template>
-    <h2>Menu List</h2>
-    <div>
+    <div class="app-container">
+        <h2>Menu List</h2>
         <div class="header-content">
             <el-form>
-                <el-row :gutter="20">
-                    <el-col :span="6">
-                        <el-form-item label="Menu name">
+                <div class="search-box">
+                    <el-form-item label="Menu name">
+                        <div class="flex-column">
                             <el-input v-model="searchForm.menu_name" placeholder="Please enter the menu name" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item>
                             <el-button type="primary" @click="handleSearch" :icon="Search">
                                 Search
                             </el-button>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                        </div>
+                    </el-form-item>
+                </div>
+
             </el-form>
             <el-button type="primary" @click="handleAdd" :icon="Plus">
                 New menu

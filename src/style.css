@@ -18,9 +18,36 @@ body{
     gap: 10px;
 }
 
+.model-input{
+    width: 50% !important;
+}
+
 .el-form-item, .el-form-item__content{
     width: 100%;
 }
-:deep() {
-    width: 100%;
+
+.search-box{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media screen and (max-width: 1480px){
+    .search-box{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 1024px){
+    .search-box{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/* 媒体查询 */
+@media screen and (max-width: 768px){
+    .model-input{
+        width: 100% !important;
+    }
 }
