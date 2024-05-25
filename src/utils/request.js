@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElLoading } from 'element-plus'
 import { TOKEN } from './constant'
 const baseURL = '/api'
 
@@ -7,6 +7,25 @@ const request = axios.create({
   baseURL,
   timeout: 30000
 })
+
+var count = 0
+let loading
+
+function loadStrat() {
+  loading = ElLoading.service({
+    lock: false,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)'
+  })
+  count++
+}
+function endLoad() {
+  count--
+  console.log(count,'count')
+  if (count == 0){
+    loading.close()
+  }
+}
 
 // 请求拦截器
 request.interceptors.request.use(
@@ -16,6 +35,7 @@ request.interceptors.request.use(
       config.headers['X-Token'] = token
       config.headers.Authorization = `Bearer ${token}`
     }
+    loadStrat()
     return config
   },
   error => {
@@ -27,6 +47,7 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
+    endLoad()
     if (response.data.code === 200) {
       return response.data
     } else {
@@ -46,6 +67,7 @@ request.interceptors.response.use(
     } else {
       ElMessage.error('网络错误')
     }
+    endLoad()
     return Promise.reject(error)
   }
 )

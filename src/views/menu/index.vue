@@ -32,9 +32,20 @@
                     <el-button @click="handleEdit(scope.$index, scope.row)">
                         Edit
                     </el-button>
-                    <el-button type="danger" @click="handleDelete(scope.$index, scope.row)">
-                        Delete
-                    </el-button>
+                    <el-popover :visible="visible == scope.row.id" placement="bottom" :width="160">
+                        <p>Are you sure to delete this?</p>
+                        <div>
+                            <el-button size="small" text @click="visible = 0">cancel</el-button>
+                            <el-button size="small" type="primary" @click="handleDelete(scope.$index, scope.row)">
+                                confirm
+                            </el-button>
+                        </div>
+                        <template #reference>
+                            <el-button type="danger" @click="visible = scope.row.id">
+                                Delete
+                            </el-button>
+                        </template>
+                    </el-popover>
                 </template>
             </el-table-column>
         </el-table>
@@ -42,12 +53,16 @@
 </template>
 <script setup>
     import { ref, onMounted } from 'vue'
+    import { ElMessage } from 'element-plus'
     import { Plus, Search } from '@element-plus/icons-vue'
     import { useRouter } from 'vue-router'
-    import { treeMenu } from "@/api/menu"
+    import { treeMenu, deleteMenu } from "@/api/menu"
+    import pinia from "@/store/index"
+    import { useUserStore } from "@/store/user";
+    const userStore = useUserStore(pinia)
 
     const router = useRouter()
-
+    const visible = ref(0)
     const searchForm = ref({
         menu_name: ''
     })
@@ -60,11 +75,30 @@
         })
     }
 
-    onMounted(() => {
+    const handleDelete = (index, row) => {
+        const id = row.id
+        deleteMenu(id).then(res => {
+            if (res.code === 200) {
+                getTreeMenuList()
+                ElMessage.success('Delete success')
+
+
+                // 重新调用store中的方法
+                setTimeout(() => {
+                    userStore.setRoutes()
+                }, 1000)
+            }
+        })
+    }
+
+    const getTreeMenuList = () => {
         treeMenu().then(res => {
             menuList.value = res.data
-            console.log(menuList.value)
         })
+    }
+
+    onMounted(() => {
+        getTreeMenuList()
     })
 </script>
 <style scoped>

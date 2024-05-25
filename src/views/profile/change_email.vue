@@ -1,24 +1,26 @@
 <template>
-    <div class="profile-box">
-        <h1>Change Email</h1>
-        <el-form :model="form" label-width="150px" :rules="rules" ref="formRef">
-            <el-form-item label="Current Email" prop="current_email">
-                <el-input v-model="form.current_email" size="large" clearable disabled></el-input>
-            </el-form-item>
-            <el-form-item label="New Email" prop="email">
-                <el-input v-model="form.email" size="large" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="Captcha" prop="captcha">
-                <div class="flex-column">
-                    <el-input v-model="form.captcha" size="large" clearable></el-input>
-                    <el-button type="primary" @click="getCaptcha" :disabled="isDisabled" size="large">{{ captchaText
-                        }}</el-button>
-                </div>
-            </el-form-item>
-            <el-form-item label>
-                <el-button type="primary" @click="submitForm">Submit</el-button>
-            </el-form-item>
-        </el-form>
+    <div class="app-container">
+        <div class="profile-box">
+            <h1>Change Email</h1>
+            <el-form :model="form" label-width="150px" :rules="rules" ref="formRef">
+                <el-form-item label="Current Email" prop="current_email">
+                    <el-input v-model="form.current_email" size="large" clearable disabled></el-input>
+                </el-form-item>
+                <el-form-item label="New Email" prop="email">
+                    <el-input v-model="form.email" size="large" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="Captcha" prop="captcha">
+                    <div class="flex-column">
+                        <el-input v-model="form.captcha" size="large" clearable></el-input>
+                        <el-button type="primary" @click="getCaptcha" :disabled="isDisabled" size="large">{{ captchaText
+                            }}</el-button>
+                    </div>
+                </el-form-item>
+                <el-form-item label>
+                    <el-button type="primary" @click="submitForm">Submit</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
     </div>
 </template>
 <script setup>

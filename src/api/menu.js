@@ -10,3 +10,20 @@ export function menuList() {
 export function treeMenu() {
     return requestMethod.get('/api/menu/treeMenu')
 }
+
+// 获取一级菜单
+export function getMenuByTop() {
+    return requestMethod.get('/api/menu/getMenuByTop')
+}
+
+
+// 添加菜单
+export function createMenu(data) {
+    return requestMethod.post('/api/menu/createMenu', data)
+}
+
+
+// 删除菜单
+export function deleteMenu(id) {
+    return requestMethod.post(`/api/menu/deleteMenu/${id}`)
+}

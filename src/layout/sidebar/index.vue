@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, inject } from 'vue'
+    import { ref, onMounted, inject, nextTick } from 'vue'
     import eventBus from "@/utils/event-bus"
     import {
         Document,
@@ -50,9 +50,7 @@
     import { useUserStore } from "@/store/user";
     const store = useUserStore(pinia)
 
-    const menuList = store.menuList
-
-    console.log(menuList, 'menuList')
+    const menuList = ref([])
 
     const isCollapse = ref(false);
 
@@ -67,10 +65,20 @@
         router.push(path)
     }
 
+    useUserStore().$subscribe((mutation) => {
+        if (mutation.events.key === 'menuList') {
+            nextTick(() => {
+                menuList.value = mutation.events.newValue
+            })
+        }
+    })
+
+
     onMounted(() => {
         eventBus.$on('collapseStatus', (status) => {
             isCollapse.value = status
         })
+        menuList.value = store.menuList
     })
 </script>
 

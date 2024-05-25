@@ -1,20 +1,22 @@
 <template>
-    <div class="profile-box">
-        <h1>Change Password</h1>
-        <el-form :model="form" label-width="150px" :rules="rules" ref="formRef">
-            <el-form-item label="Old Password" prop="old_password">
-                <el-input v-model="form.old_password" size="large"></el-input>
-            </el-form-item>
-            <el-form-item label="Password" prop="password">
-                <el-input v-model="form.password" size="large"></el-input>
-            </el-form-item>
-            <el-form-item label="Confirm Password" prop="confirm_password">
-                <el-input v-model="form.confirm_password" size="large"></el-input>
-            </el-form-item>
-            <el-form-item label>
-                <el-button type="primary" @click="submitForm">Submit</el-button>
-            </el-form-item>
-        </el-form>
+    <div class="app-container">
+        <div class="profile-box">
+            <h1>Change Password</h1>
+            <el-form :model="form" label-width="150px" :rules="rules" ref="formRef">
+                <el-form-item label="Old Password" prop="old_password">
+                    <el-input v-model="form.old_password" size="large"></el-input>
+                </el-form-item>
+                <el-form-item label="Password" prop="password">
+                    <el-input v-model="form.password" size="large"></el-input>
+                </el-form-item>
+                <el-form-item label="Confirm Password" prop="confirm_password">
+                    <el-input v-model="form.confirm_password" size="large"></el-input>
+                </el-form-item>
+                <el-form-item label>
+                    <el-button type="primary" @click="submitForm">Submit</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
     </div>
 </template>
 <script setup>
