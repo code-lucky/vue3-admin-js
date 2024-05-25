@@ -1,5 +1,6 @@
 <template>
     <div class="app-container">
+        <h2>Menu {{ id ? 'Edit': 'Create'}}</h2>
         <div class="model-input">
             <el-form :model="form" inline size="large" label-width="auto" :rules="rules" ref="formRef">
                 <el-form-item label="Name" prop="menu_name">
@@ -20,15 +21,16 @@
                     <el-input v-model="form.menu_icon" placeholder="Select icon" readonly @click="openIconDialog" />
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="submitForm()">Create</el-button>
-                    <el-button @click="resetForm('ruleForm')">Reset</el-button>
+                    <el-button type="primary" @click="submitForm()">Save</el-button>
+                    <el-button @click="goback">Go back</el-button>
                 </el-form-item>
             </el-form>
         </div>
 
         <el-dialog v-model="iconDialog" title="Select icon" width="80%" :before-close="handleClose">
             <div class="icon-list">
-                <div class="icon-list-item" v-for="item in iconList" :key="item.key" @click="selectIcon(item.component)">
+                <div class="icon-list-item" v-for="item in iconList" :key="item.key"
+                    @click="selectIcon(item.component)">
                     <el-icon>
                         <component :is="item.component"></component>
                     </el-icon>
@@ -48,7 +50,8 @@
     import { ref, onMounted, markRaw } from 'vue'
     import { ElMessage } from 'element-plus'
     import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-    import { getMenuByTop, createMenu } from "@/api/menu"
+    import { getMenuByTop, createMenu, getMenu, updateMenu } from "@/api/menu"
+    import { useRoute } from 'vue-router'
     import router from '@/router'
     const form = ref({
         menu_name: '',
@@ -58,6 +61,8 @@
         sort: 0,
         menu_icon: '',
     })
+    const route = useRoute()
+    const id = route.query.id
     const formRef = ref(null)
     const iconList = ref([])
     const iconDialog = ref(false)
@@ -72,9 +77,6 @@
         ],
         menu_component: [
             { required: true, message: 'Please input component path', trigger: 'blur' }
-        ],
-        menu_icon: [
-            { required: true, message: 'Please select icon', trigger: 'blur' }
         ]
     })
 
@@ -90,7 +92,6 @@
     const getMenuList = () => {
         getMenuByTop().then(res => {
             menuList.value = res.data
-
             menuList.value.unshift({
                 id: 0,
                 menu_name: 'Top menu'
@@ -106,20 +107,35 @@
     const submitForm = () => {
         formRef.value.validate(valid => {
             if (valid) {
-                createMenu(form.value).then(res => {
-                    if (res.code === 200) {
-                        ElMessage.success('Create success')
-                        setTimeout(() => {
-                            window.location.reload()
-                            router.push('/menu/index')
-                        }, 1500)
-                    }
-                })
+                if (id) {
+                    form.value.id = id
+                    updateMenu(form.value).then(res => {
+                        if (res.code === 200) {
+                            ElMessage.success('Save success')
+                            setTimeout(() => {
+                                router.go(-1)
+                            }, 1500)
+                        }
+                    })
+                } else {
+                    createMenu(form.value).then(res => {
+                        if (res.code === 200) {
+                            ElMessage.success('Save success')
+                            setTimeout(() => {
+                                router.go(-1)
+                            }, 1500)
+                        }
+                    })
+                }
             } else {
                 console.log('Validation failed')
                 return false
             }
         })
+    }
+
+    const goback = () => {
+        router.go(-1)
     }
 
     onMounted(() => {
@@ -128,6 +144,21 @@
             iconList.value.push({
                 name: key,
                 component: markRaw(component)
+            })
+        }
+        if (id) {
+            console.log('id', id)
+            getMenu(id).then(res => {
+                const data = res.data
+                console.log(data)
+                form.value = {
+                    menu_name: data.menu_name,
+                    pid: data.pid,
+                    menu_path: data.menu_path,
+                    menu_component: data.menu_component,
+                    menu_icon: data.menu_icon,
+                    sort: 0
+                }
             })
         }
     })

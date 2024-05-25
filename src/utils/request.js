@@ -21,7 +21,6 @@ function loadStrat() {
 }
 function endLoad() {
   count--
-  console.log(count,'count')
   if (count == 0){
     loading.close()
   }
@@ -48,21 +47,25 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   (response) => {
     endLoad()
-    if (response.data.code === 200) {
-      return response.data
-    } else {
-      if (response.data.data === '用户未登录') {
+    const data = response.data
+    if (data.code === 200) {
+      return data
+    }else {
+      if (data.data === '用户未登录') {
         window.localStorage.clear()
         window.location.reload()
-        ElMessage.error(response.data.data)
+        ElMessage.error(data.data)
       } else {
-        ElMessage.error(response.data.data)
+        ElMessage.error(data.data)
       }
     }
   },
   error => {
     const data = error.response.data
     if(data.statusCode === 400){
+      const message = data.errors.message[0];
+      ElMessage.error(message)
+    }else if(data.statusCode === 500){
       ElMessage.error(data.message)
     } else {
       ElMessage.error('网络错误')

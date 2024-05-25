@@ -2,19 +2,6 @@
     <div class="app-container">
         <h2>Menu List</h2>
         <div class="header-content">
-            <el-form>
-                <div class="search-box">
-                    <el-form-item label="Menu name">
-                        <div class="flex-column">
-                            <el-input v-model="searchForm.menu_name" placeholder="Please enter the menu name" />
-                            <el-button type="primary" @click="handleSearch" :icon="Search">
-                                Search
-                            </el-button>
-                        </div>
-                    </el-form-item>
-                </div>
-
-            </el-form>
             <el-button type="primary" @click="handleAdd" :icon="Plus">
                 New menu
             </el-button>
@@ -95,6 +82,10 @@
         treeMenu().then(res => {
             menuList.value = res.data
         })
+    }
+
+    const handleEdit = (index, row) =>{
+        router.push(`/menu/menu-model?id=${row.id}`)
     }
 
     onMounted(() => {
