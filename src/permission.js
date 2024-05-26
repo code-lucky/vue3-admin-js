@@ -11,9 +11,14 @@ router.beforeEach(async (to, form, next) => {
     NProgress.start();
     const Token = localStorage.getItem(TOKEN)
     const hasRoutes = store.hasRoutes
+
     if (Token) {
         if (to.path === '/login') {
             next({ path: '/' })
+            NProgress.done()
+        }else if(to.path === '/'){
+            next({ path: '/dashboard/index'})
+            console.log(store.menuList)
             NProgress.done()
         } else {
             if (!hasRoutes) {
