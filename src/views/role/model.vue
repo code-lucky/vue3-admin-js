@@ -24,7 +24,7 @@
     import * as ElementPlusIconsVue from '@element-plus/icons-vue'
     import { useRoute } from 'vue-router'
     import { treeMenu } from "@/api/menu"
-    import { create, update } from '@/api/role'
+    import { create, update, detail } from '@/api/role'
     import router from '@/router'
     const form = ref({
         role_name: '',
@@ -44,7 +44,7 @@
     const submitForm = () => {
         formRef.value.validate(valid => {
             if (valid) {
-                if(id){
+                if (id) {
                     update(id, form.value).then(res => {
                         if (res.code === 200) {
                             ElMessage.success('Update success')
@@ -55,11 +55,11 @@
                             ElMessage.error(res.message)
                         }
                     })
-                }else{
+                } else {
                     create(form.value).then(res => {
                         if (res.code === 200) {
                             ElMessage.success('Create success')
-                            
+
                             setTimeout(() => {
                                 router.push('/role/index')
                             }, 1000)
@@ -79,26 +79,33 @@
         router.go(-1)
     }
 
-    onMounted(() => {
+    const getTreeMenu = () => {
         treeMenu().then(res => {
             if (res.code === 200) {
                 const list = res.data
                 menuList.value = list.map(item => {
+                    console.log(item.children, 'item')
                     return {
                         value: item.id,
                         label: item.menu_name,
-                        children: item.children.map(child => {
+                        children: item.children ? item.children.map(child => {
                             return {
                                 value: child.id,
                                 label: child.menu_name
                             }
-                        })
+                        }) : []
                     }
                 })
             }
         })
-        if (id) {
+    }
 
+    onMounted(() => {
+        getTreeMenu()
+        if (id) {
+            detail(id).then(res => {
+                form.value = res.data
+            })
         }
     })
 </script>

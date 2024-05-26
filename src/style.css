@@ -13,6 +13,7 @@ body{
     background-color: #fff;
     height: calc(100vh - 160px);
     border-radius: 6px;
+    overflow: auto;
 }
 
 .flex-column {
@@ -32,6 +33,12 @@ body{
 .search-box{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+}
+
+.page-content{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 @media screen and (max-width: 1480px){

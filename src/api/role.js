@@ -12,5 +12,10 @@ export function create(data) {
 
 // 更新角色
 export function update(id, data) {
-    return requestMethod.post(`/api/role/update?${id}`, data)
+    return requestMethod.post(`/api/role/update/${id}`, data)
+}
+
+// 获取角色信息
+export function detail(id) {
+    return requestMethod.get(`/api/role/detail/${id}`)
 }

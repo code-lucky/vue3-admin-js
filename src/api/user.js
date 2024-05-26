@@ -36,3 +36,13 @@ export function resetPasswordCode(email) {
 export function resetPassword(data) {
     return requestMethod.post(`/api/user/resetPassword?email=${data.email}&captcha=${data.captcha}`)
 }
+
+// 获取用户列表
+export function userList(params) {
+    return requestMethod.get('/api/user/userList', params)
+}
+
+// 用户授权
+export function auth(data) {
+    return requestMethod.post(`/api/user/auth/${data.id}?role_id=${data.role_id}`)
+}
