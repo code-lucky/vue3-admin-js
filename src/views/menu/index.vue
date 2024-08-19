@@ -68,8 +68,6 @@
             if (res.code === 200) {
                 getTreeMenuList()
                 ElMessage.success('Delete success')
-
-
                 // 重新调用store中的方法
                 setTimeout(() => {
                     userStore.setRoutes()

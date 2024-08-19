@@ -1,27 +1,21 @@
 <template>
     <div class="app-container">
-        <h2>Menu {{ id ? 'Edit': 'Create'}}</h2>
+        <h2>Navigation {{ id ? 'Edit': 'Create'}}</h2>
         <div class="model-input">
             <el-form :model="form" inline size="large" label-width="auto" :rules="rules" ref="formRef">
-                <el-form-item label="Name" prop="menu_name">
-                    <el-input v-model="form.menu_name" placeholder="Please input menu name" clearable />
+                <el-form-item label="Name" prop="name">
+                    <el-input v-model="form.name" placeholder="Please input name" clearable />
                 </el-form-item>
-                <el-form-item label="Parent menu" prop="pid">
-                    <el-select v-model="form.pid" placeholder="Select">
-                        <el-option v-for="item in menuList" :key="item.id" :label="item.menu_name" :value="item.id" />
+                <el-form-item label="Path" prop="path">
+                    <el-input v-model="form.path" placeholder="Please input path" clearable />
+                </el-form-item>
+                <el-form-item label="Parent Level" prop="pid">
+                    <el-select v-model="form.pid" placeholder="Please select" size="large">
+                        <el-option v-for="item in navList" :key="item.id" :label="item.name" :value="item.id" />
                     </el-select>
                 </el-form-item>
-                <el-form-item label="Path" prop="menu_path">
-                    <el-input v-model="form.menu_path" placeholder="Please input menu path" clearable />
-                </el-form-item>
-                <el-form-item label="Component" prop="menu_component">
-                    <el-input v-model="form.menu_component" placeholder="Please input component path" clearable />
-                </el-form-item>
-                <el-form-item label="Icon" prop="menu_icon">
-                    <el-input v-model="form.menu_icon" placeholder="Select icon" readonly @click="openIconDialog" />
-                </el-form-item>
-                <el-form-item label="Hide" prop="hide">
-                    <el-switch v-model="form.hide" :active-value="1" :inactive-value="0"></el-switch>
+                <el-form-item label="Icon" prop="icon">
+                    <el-input v-model="form.icon" placeholder="Please select" readonly @click="openIconDialog" />
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="submitForm()">Save</el-button>
@@ -53,61 +47,49 @@
     import { ref, onMounted, markRaw } from 'vue'
     import { ElMessage } from 'element-plus'
     import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-    import { getMenuByTop, createMenu, getMenu, updateMenu } from "@/api/menu"
     import { useRoute } from 'vue-router'
     import router from '@/router'
-    const form = ref({
-        menu_name: '',
-        pid: 0,
-        menu_path: '',
-        menu_component: '',
-        sort: 0,
-        menu_icon: '',
-        hide: 0,
-    })
+    import { getNavigationList, createNavigation, updateNavigation, getNavigationDetail } from '@/api/navigation';
     const route = useRoute()
     const id = route.query.id
     const formRef = ref(null)
+    const form = ref({
+        name: '',
+        path: '',
+        pid: '',
+        icon: '',
+    })
     const iconList = ref([])
     const iconDialog = ref(false)
-    const menuList = ref([])
+
+    const navList = ref([])
 
     const rules = ref({
-        menu_name: [
-            { required: true, message: 'Please input menu name', trigger: 'blur' }
+        name: [
+            { required: true, message: 'Please input name', trigger: 'blur' }
         ],
-        menu_path: [
-            { required: true, message: 'Please input menu path', trigger: 'blur' }
+        path: [
+            { required: true, message: 'Please input path', trigger: 'blur' }
         ],
-        menu_component: [
-            { required: true, message: 'Please input component path', trigger: 'blur' }
-        ],
-        hide:[
-            { required: true, message: 'Please Select Hide', trigger: 'blur' }
+        pid: [
+            { required: true, message: 'Please select parent level', trigger: 'change' }
         ]
     })
+
+    const goback = () => {
+        router.go(-1)
+    }
 
     const openIconDialog = () => {
         iconDialog.value = true
     }
 
-    const handleClose = () => {
+    const handleClose = (done) => {
         iconDialog.value = false
     }
 
-    // 获取所有的一级菜单
-    const getMenuList = () => {
-        getMenuByTop().then(res => {
-            menuList.value = res.data
-            menuList.value.unshift({
-                id: 0,
-                menu_name: 'Top menu'
-            })
-        })
-    }
-
     const selectIcon = (item) => {
-        form.value.menu_icon = item.name
+        form.value.icon = item.name
         iconDialog.value = false
     }
 
@@ -115,25 +97,31 @@
         formRef.value.validate(valid => {
             if (valid) {
                 if (id) {
-                    form.value.id = id
-                    updateMenu(form.value).then(res => {
+                    // update
+                    updateNavigation(form.value).then(res => {
                         if (res.code === 200) {
-                            ElMessage.success('Save success')
+                            ElMessage.success('Success')
                             setTimeout(() => {
                                 router.go(-1)
-                            }, 500)
+                            }, 500);
+                        } else {
+                            ElMessage.error(res.message)
                         }
                     })
                 } else {
-                    createMenu(form.value).then(res => {
+                    // create
+                    createNavigation(form.value).then((res) => {
                         if (res.code === 200) {
-                            ElMessage.success('Save success')
+                            ElMessage.success('Success')
                             setTimeout(() => {
                                 router.go(-1)
-                            }, 500)
+                            }, 500);
+                        } else {
+                            ElMessage.error(res.message)
                         }
                     })
                 }
+
             } else {
                 console.log('Validation failed')
                 return false
@@ -141,31 +129,33 @@
         })
     }
 
-    const goback = () => {
-        router.go(-1)
-    }
-
     onMounted(() => {
-        getMenuList()
         for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
             iconList.value.push({
                 name: key,
                 component: markRaw(component)
             })
         }
+
+        getNavigationList().then((res) => {
+            const obj = {
+                id: 0,
+                name: 'Self One Level',
+            }
+            if (res.code === 200) {
+                navList.value = res.data;
+                navList.value.unshift(obj)
+            } else {
+                navList.value = [obj];
+            }
+        });
+
         if (id) {
-            console.log('id', id)
-            getMenu(id).then(res => {
-                const data = res.data
-                console.log(data)
-                form.value = {
-                    menu_name: data.menu_name,
-                    pid: data.pid,
-                    menu_path: data.menu_path,
-                    menu_component: data.menu_component,
-                    menu_icon: data.menu_icon,
-                    sort: 0,
-                    hide: data.hide
+            // edit
+            // get navigation info
+            getNavigationDetail(id).then(res=>{
+                if(res.code === 200){
+                    form.value = res.data
                 }
             })
         }
