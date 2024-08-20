@@ -25,7 +25,7 @@
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="submitForm()">Save</el-button>
-                    <el-button @click="goback">Go back</el-button>
+                    <el-button @click="goback">Back</el-button>
                 </el-form-item>
             </el-form>
         </div>

@@ -1,78 +1,53 @@
 <template>
     <div class="app-container">
-        <h2>Pricing {{ id ? 'Edit': 'Create'}}</h2>
+        <h2>Article {{ id ? 'Edit': 'Create'}}</h2>
         <div class="model-input">
             <el-form :model="form" inline size="large" label-width="auto" :rules="rules" ref="formRef">
+                <el-form-item label="Title" prop="title">
+                    <el-input v-model="form.title" placeholder="Please input title" clearable />
+                </el-form-item>
                 <el-form-item label="Name" prop="name">
                     <el-input v-model="form.name" placeholder="Please input name" clearable />
                 </el-form-item>
-                <el-form-item label="Path" prop="path">
-                    <el-input v-model="form.path" placeholder="Please input path" clearable />
-                </el-form-item>
-                <el-form-item label="Parent Level" prop="pid">
-                    <el-select v-model="form.pid" placeholder="Please select" size="large">
-                        <el-option v-for="item in navList" :key="item.id" :label="item.name" :value="item.id" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="Icon" prop="icon">
-                    <el-input v-model="form.icon" placeholder="Please select" readonly @click="openIconDialog" />
+                <el-form-item label="Content" prop="content">
+                    <Editor v-model="form.content" />
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="submitForm()">Save</el-button>
-                    <el-button @click="goback">Go back</el-button>
+                    <el-button @click="goback">Back</el-button>
                 </el-form-item>
             </el-form>
         </div>
-
-        <el-dialog v-model="iconDialog" title="Select icon" width="80%" :before-close="handleClose">
-            <div class="icon-list">
-                <div class="icon-list-item" v-for="item in iconList" :key="item.key"
-                    @click="selectIcon(item.component)">
-                    <el-icon>
-                        <component :is="item.component"></component>
-                    </el-icon>
-                </div>
-            </div>
-            <template #footer>
-                <div class="dialog-footer">
-                    <el-button type="primary" @click="iconDialog = false">
-                        Cancel
-                    </el-button>
-                </div>
-            </template>
-        </el-dialog>
     </div>
 </template>
 <script setup>
     import { ref, onMounted, markRaw } from 'vue'
+    import Editor from '@/components/editor.vue'
     import { ElMessage } from 'element-plus'
     import * as ElementPlusIconsVue from '@element-plus/icons-vue'
     import { useRoute } from 'vue-router'
     import router from '@/router'
-    import { getNavigationList, createNavigation, updateNavigation, getNavigationDetail } from '@/api/navigation';
+    import { createArticle, updateArticle, getArticleDetail } from '@/api/article';
     const route = useRoute()
     const id = route.query.id
     const formRef = ref(null)
     const form = ref({
+        title: '',
         name: '',
-        path: '',
-        pid: '',
-        icon: '',
+        content: '',
+        type: '0',
+        cover_img: '',
     })
-    const iconList = ref([])
-    const iconDialog = ref(false)
-
-    const navList = ref([])
 
     const rules = ref({
+        title: [
+            { required: true, message: 'Please input title', trigger: 'blur' }
+        ],
         name: [
             { required: true, message: 'Please input name', trigger: 'blur' }
         ],
-        path: [
-            { required: true, message: 'Please input path', trigger: 'blur' }
-        ],
-        pid: [
-            { required: true, message: 'Please select parent level', trigger: 'change' }
+        content: [
+            { required: true, message: 'Please input content', trigger: 'blur' }
         ]
     })
 
@@ -80,25 +55,12 @@
         router.go(-1)
     }
 
-    const openIconDialog = () => {
-        iconDialog.value = true
-    }
-
-    const handleClose = (done) => {
-        iconDialog.value = false
-    }
-
-    const selectIcon = (item) => {
-        form.value.icon = item.name
-        iconDialog.value = false
-    }
-
     const submitForm = () => {
         formRef.value.validate(valid => {
             if (valid) {
                 if (id) {
                     // update
-                    updateNavigation(form.value).then(res => {
+                    updateArticle(form.value).then(res => {
                         if (res.code === 200) {
                             ElMessage.success('Success')
                             setTimeout(() => {
@@ -110,7 +72,7 @@
                     })
                 } else {
                     // create
-                    createNavigation(form.value).then((res) => {
+                    createArticle(form.value).then((res) => {
                         if (res.code === 200) {
                             ElMessage.success('Success')
                             setTimeout(() => {
@@ -130,31 +92,10 @@
     }
 
     onMounted(() => {
-        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-            iconList.value.push({
-                name: key,
-                component: markRaw(component)
-            })
-        }
-
-        getNavigationList().then((res) => {
-            const obj = {
-                id: 0,
-                name: 'Self One Level',
-            }
-            if (res.code === 200) {
-                navList.value = res.data;
-                navList.value.unshift(obj)
-            } else {
-                navList.value = [obj];
-            }
-        });
-
         if (id) {
-            // edit
-            // get navigation info
-            getNavigationDetail(id).then(res=>{
-                if(res.code === 200){
+            // get article info
+            getArticleDetail(id).then(res => {
+                if (res.code === 200) {
                     form.value = res.data
                 }
             })

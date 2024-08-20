@@ -1,18 +1,19 @@
 <template>
     <div class="app-container">
-        <h2>Pricing List</h2>
+        <h2>Article List</h2>
         <div class="header-content">
             <el-button type="primary" @click="handleAdd" :icon="Plus">
-                New Pricing
+                New Article
             </el-button>
         </div>
 
-        <custom-table v-if="dataList.length>0" :data="dataList" :columns="tableColumns" @edit="handleEdit" @delete="handleDelete" />
+        <custom-table v-if="dataList.length>0" :data="dataList" :columns="tableColumns" @edit="handleEdit"
+            @delete="handleDelete" :isPagination="true" :pageData="pageData" />
     </div>
 </template>
 <script setup>
     import { ref, onMounted } from 'vue';
-    import { getNavigationList, deleteNavigation } from '@/api/navigation';
+    import { getArticleList, deleteArticle } from '@/api/article';
     import CustomTable from '@/components/custom-table.vue';
     import { useRouter } from 'vue-router';
     import { ElMessage } from 'element-plus'
@@ -21,9 +22,8 @@
 
     const tableColumns = ref([
         { prop: 'id', label: 'ID', width: '80' },
+        { prop: 'title', label: 'Title' },
         { prop: 'name', label: 'Name' },
-        { prop: 'path', label: 'Path' },
-        { prop: 'icon', label: 'Icon' },
         { prop: 'create_time', label: 'Create Time' },
         { prop: 'actions', label: 'Actions', type: 'action' },
     ]);
@@ -35,18 +35,18 @@
     });
 
     const handleAdd = () => {
-        router.push({ path: '/navigation/navigation-model' });
+        router.push({ path: '/article/article-model' });
     };
 
     const handleEdit = (idnex, data) => {
-        router.push(`/navigation/navigation-model?id=${data.id}`)
+        router.push(`/article/article-model?id=${data.id}`)
     }
 
     const handleDelete = (index, data) => {
         const id = data.id
 
         if (id) {
-            deleteNavigation(id).then(res => {
+            deleteArticle(id).then(res => {
                 getList()
                 ElMessage.success('Delete success')
             })
@@ -54,9 +54,10 @@
     }
 
     const getList = () => {
-        getNavigationList().then((res) => {
+        getArticleList().then((res) => {
             if (res.code === 200) {
-                dataList.value = res.data;
+                dataList.value = res.data.list;
+                pageData.value.total = res.data.total;
             } else {
                 dataList.value = [];
             }
