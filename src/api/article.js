@@ -1,8 +1,8 @@
 import requestMethod from '@/utils/request'
 
 // Get Articles
-export function getArticleList() {
-    return requestMethod.get('/api/article/list')
+export function getArticleList(params) {
+    return requestMethod.get('/api/article/list', params)
 }
 
 // update Article

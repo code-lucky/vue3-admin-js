@@ -8,7 +8,7 @@
         </div>
 
         <custom-table v-if="dataList.length>0" :data="dataList" :columns="tableColumns" @edit="handleEdit"
-            @delete="handleDelete" :isPagination="true" :pageData="pageData" />
+            @delete="handleDelete" :isPagination="true" :pageData="pageData" @update:pageData="pageChange"/>
     </div>
 </template>
 <script setup>
@@ -53,8 +53,14 @@
         }
     }
 
+    const pageChange = (val) => {
+        console.log(val)
+        pageData.value = val;
+        getList();
+    }
+
     const getList = () => {
-        getArticleList().then((res) => {
+        getArticleList(pageData.value).then((res) => {
             if (res.code === 200) {
                 dataList.value = res.data.list;
                 pageData.value.total = res.data.total;

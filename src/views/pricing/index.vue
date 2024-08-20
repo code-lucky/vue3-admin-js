@@ -7,12 +7,12 @@
             </el-button>
         </div>
 
-        <custom-table v-if="dataList.length>0" :data="dataList" :columns="tableColumns" @edit="handleEdit" @delete="handleDelete" />
+        <custom-table :data="dataList" :columns="tableColumns" @edit="handleEdit" @delete="handleDelete" />
     </div>
 </template>
 <script setup>
     import { ref, onMounted } from 'vue';
-    import { getNavigationList, deleteNavigation } from '@/api/navigation';
+    import { getPricingList, deletePricing } from '@/api/pricing';
     import CustomTable from '@/components/custom-table.vue';
     import { useRouter } from 'vue-router';
     import { ElMessage } from 'element-plus'
@@ -22,8 +22,9 @@
     const tableColumns = ref([
         { prop: 'id', label: 'ID', width: '80' },
         { prop: 'name', label: 'Name' },
-        { prop: 'path', label: 'Path' },
-        { prop: 'icon', label: 'Icon' },
+        { prop: 'original_price', label: 'Original Price' },
+        { prop: 'price', label: 'Price' },
+        { prop: 'discount', label: 'Discount' },
         { prop: 'create_time', label: 'Create Time' },
         { prop: 'actions', label: 'Actions', type: 'action' },
     ]);
@@ -35,18 +36,18 @@
     });
 
     const handleAdd = () => {
-        router.push({ path: '/navigation/navigation-model' });
+        router.push({ path: '/pricing/pricing-model' });
     };
 
     const handleEdit = (idnex, data) => {
-        router.push(`/navigation/navigation-model?id=${data.id}`)
+        router.push(`/pricing/pricing-model?id=${data.id}`)
     }
 
     const handleDelete = (index, data) => {
         const id = data.id
 
         if (id) {
-            deleteNavigation(id).then(res => {
+            deletePricing(id).then(res => {
                 getList()
                 ElMessage.success('Delete success')
             })
@@ -54,7 +55,7 @@
     }
 
     const getList = () => {
-        getNavigationList().then((res) => {
+        getPricingList().then((res) => {
             if (res.code === 200) {
                 dataList.value = res.data;
             } else {

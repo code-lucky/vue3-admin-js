@@ -6,16 +6,14 @@
                 <el-form-item label="Name" prop="name">
                     <el-input v-model="form.name" placeholder="Please input name" clearable />
                 </el-form-item>
-                <el-form-item label="Path" prop="path">
-                    <el-input v-model="form.path" placeholder="Please input path" clearable />
+                <el-form-item label="Original Price" prop="original_price">
+                    <el-input v-model="form.original_price" placeholder="Please input original price" clearable />
                 </el-form-item>
-                <el-form-item label="Parent Level" prop="pid">
-                    <el-select v-model="form.pid" placeholder="Please select" size="large">
-                        <el-option v-for="item in navList" :key="item.id" :label="item.name" :value="item.id" />
-                    </el-select>
+                <el-form-item label="Price" prop="price">
+                    <el-input v-model="form.price" placeholder="Please input price" clearable />
                 </el-form-item>
-                <el-form-item label="Icon" prop="icon">
-                    <el-input v-model="form.icon" placeholder="Please select" readonly @click="openIconDialog" />
+                <el-form-item label="Discount" prop="discount">
+                    <el-input v-model="form.discount" placeholder="Please input discount" clearable />
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="submitForm()">Save</el-button>
@@ -49,7 +47,7 @@
     import * as ElementPlusIconsVue from '@element-plus/icons-vue'
     import { useRoute } from 'vue-router'
     import router from '@/router'
-    import { getNavigationList, createNavigation, updateNavigation, getNavigationDetail } from '@/api/navigation';
+    import { getPricingList, createPricing, updatePricing, getPricingDetail } from '@/api/pricing';
     const route = useRoute()
     const id = route.query.id
     const formRef = ref(null)
@@ -59,8 +57,6 @@
         pid: '',
         icon: '',
     })
-    const iconList = ref([])
-    const iconDialog = ref(false)
 
     const navList = ref([])
 
@@ -68,11 +64,14 @@
         name: [
             { required: true, message: 'Please input name', trigger: 'blur' }
         ],
-        path: [
-            { required: true, message: 'Please input path', trigger: 'blur' }
+        original_price: [
+            { required: true, message: 'Please input original price', trigger: 'blur' }
         ],
-        pid: [
-            { required: true, message: 'Please select parent level', trigger: 'change' }
+        price: [
+            { required: true, message: 'Please input price', trigger: 'blur' }
+        ],
+        discount:[
+            { required: true, message: 'Please input discount', trigger: 'blur' }
         ]
     })
 
@@ -80,25 +79,12 @@
         router.go(-1)
     }
 
-    const openIconDialog = () => {
-        iconDialog.value = true
-    }
-
-    const handleClose = (done) => {
-        iconDialog.value = false
-    }
-
-    const selectIcon = (item) => {
-        form.value.icon = item.name
-        iconDialog.value = false
-    }
-
     const submitForm = () => {
         formRef.value.validate(valid => {
             if (valid) {
                 if (id) {
                     // update
-                    updateNavigation(form.value).then(res => {
+                    updatePricing(form.value).then(res => {
                         if (res.code === 200) {
                             ElMessage.success('Success')
                             setTimeout(() => {
@@ -110,7 +96,7 @@
                     })
                 } else {
                     // create
-                    createNavigation(form.value).then((res) => {
+                    createPricing(form.value).then((res) => {
                         if (res.code === 200) {
                             ElMessage.success('Success')
                             setTimeout(() => {
@@ -123,37 +109,16 @@
                 }
 
             } else {
-                console.log('Validation failed')
                 return false
             }
         })
     }
 
     onMounted(() => {
-        for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-            iconList.value.push({
-                name: key,
-                component: markRaw(component)
-            })
-        }
-
-        getNavigationList().then((res) => {
-            const obj = {
-                id: 0,
-                name: 'Self One Level',
-            }
-            if (res.code === 200) {
-                navList.value = res.data;
-                navList.value.unshift(obj)
-            } else {
-                navList.value = [obj];
-            }
-        });
-
         if (id) {
             // edit
             // get navigation info
-            getNavigationDetail(id).then(res=>{
+            getPricingDetail(id).then(res=>{
                 if(res.code === 200){
                     form.value = res.data
                 }
